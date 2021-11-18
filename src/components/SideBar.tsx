@@ -1,36 +1,37 @@
-import { Button } from "./Button";
+import { memo } from 'react'
 
-interface SideBarProps {
-  genres: Array<{
-    id: number;
-    name: 'action' | 'comedy' | 'documentary' | 'drama' | 'horror' | 'family';
-    title: string;
-  }>;
-  selectedGenreId: number;
-  buttonClickCallback: (args: any) => void;
-}
+// components
+import { Button } from './Button'
 
-export function SideBar({
-  genres,
-  selectedGenreId,
-  buttonClickCallback
-}: SideBarProps) {
+// contexts
+import { useSelectedMovieContext } from '../contexts/selectedMovie'
+
+function SideBarComponent() {
+  // hooks
+  const { changeMovieCategory, selectedGenreId, memoizedGenres } =
+    useSelectedMovieContext()
+
   return (
-    <nav className="sidebar">
-      <span>Watch<p>Me</p></span>
+    <nav className='sidebar'>
+      <span>
+        Watch<p>Me</p>
+      </span>
 
-      <div className="buttons-container">
-        {genres.map(genre => (
+      <div className='buttons-container'>
+        {memoizedGenres.map((genre) => (
           <Button
             key={String(genre.id)}
             title={genre.title}
             iconName={genre.name}
-            onClick={() => buttonClickCallback(genre.id)}
+            onClick={() => changeMovieCategory(genre.id)}
             selected={selectedGenreId === genre.id}
           />
         ))}
       </div>
-
     </nav>
   )
 }
+
+const SideBar = memo(SideBarComponent)
+
+export { SideBar }
